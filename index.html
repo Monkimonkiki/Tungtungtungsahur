@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHOPPER SAHURRRRR</title>
+    <title>GET OUT SAHURRRRR</title>
     <style>
         body {
-            background-color: #ffcc00;
+            background-color: #000;
             font-family: 'Impact', sans-serif;
             display: flex;
             flex-direction: column;
@@ -18,40 +18,39 @@
             text-align: center;
         }
 
-        h1 {
-            font-size: 5rem;
-            color: #d90429;
-            text-shadow: 4px 4px 0px #fff;
-            z-index: 10;
+        #main-text {
+            font-size: 6rem;
+            color: #fff;
+            text-shadow: 5px 5px #ff0000;
+            z-index: 100;
+            pointer-events: none;
         }
 
-        /* The Chopper Image Style */
         #chopper {
             position: absolute;
-            width: 200px; /* Adjust size as needed */
-            height: auto;
-            z-index: 5;
-            transition: transform 0.1s;
+            width: 250px;
+            z-index: 50;
+            transition: transform 0.05s;
         }
 
-        .snooze-btn {
-            margin-top: 20px;
-            padding: 20px 40px;
-            font-size: 2rem;
-            background: #000;
-            color: #fff;
-            border: 5px solid #fff;
+        .get-out-btn {
+            margin-top: 30px;
+            padding: 25px 50px;
+            font-size: 2.5rem;
+            background: #d90429;
+            color: white;
+            border: 8px solid #fff;
             cursor: pointer;
-            border-radius: 50px;
             font-weight: bold;
-            z-index: 100;
+            z-index: 200;
+            box-shadow: 0 0 20px rgba(255,0,0,0.8);
         }
 
         #overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #000;
-            color: gold;
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -60,28 +59,29 @@
         }
     </style>
 </head>
-<body>
+<body onclick="spawnMiniChopper(event)">
 
     <div id="overlay" onclick="startChaos()">
-        <h1>TAP FOR CHOPPER SAHUR <br> 🦌 🥁 📢</h1>
+        <h1>CLICK TO ENTER THE SAHUR VOID <br> 🥁 🦌 📢</h1>
     </div>
 
     <img src="chopper.jpg" id="chopper" alt="CHOPPER">
 
     <h1 id="main-text">TUNG TUNG TUNG!</h1>
     
-    <button class="snooze-btn" onclick="blastHorn()">SNOOZE (CHOPPER MODE)</button>
+    <button class="get-out-btn" onclick="triggerGetOut(event)">I'M SLEEPING!!</button>
 
     <audio id="sahurAudio" loop>
         <source src="sahur.mp3" type="audio/mpeg">
     </audio>
-    <audio id="hornAudio">
-        <source src="https://www.myinstants.com/media/sounds/mlg-airhorn.mp3" type="audio/mpeg">
+    
+    <audio id="getOutAudio">
+        <source src="https://www.myinstants.com/media/sounds/get-out-meme.mp3" type="audio/mpeg">
     </audio>
 
     <script>
         let posX = 0, posY = 0;
-        let speedX = 5, speedY = 5;
+        let speedX = 8, speedY = 8;
         let isMoving = false;
 
         function startChaos() {
@@ -90,26 +90,25 @@
             isMoving = true;
             moveChopper();
             
-            // Background Flash
+            // Fast flashing background
             setInterval(() => {
-                const colors = ['#ff0000', '#00ff00', '#ffffff', '#ffff00', '#ff00ff'];
+                const colors = ['#ff0000', '#000000', '#ffffff'];
                 document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            }, 150);
+            }, 100);
         }
 
         function moveChopper() {
             const img = document.getElementById('chopper');
-            const screenWidth = window.innerWidth - img.clientWidth;
-            const screenHeight = window.innerHeight - img.clientHeight;
-
             function animate() {
                 if (!isMoving) return;
-                
+                const screenWidth = window.innerWidth - img.clientWidth;
+                const screenHeight = window.innerHeight - img.clientHeight;
+
                 posX += speedX;
                 posY += speedY;
 
-                if (posX >= screenWidth || posX <= 0) speedX *= -1;
-                if (posY >= screenHeight || posY <= 0) speedY *= -1;
+                if (posX >= screenWidth || posX <= 0) speedX *= -1.05; // Speeds up on bounce!
+                if (posY >= screenHeight || posY <= 0) speedY *= -1.05;
 
                 img.style.left = posX + 'px';
                 img.style.top = posY + 'px';
@@ -119,20 +118,43 @@
             animate();
         }
 
-        function blastHorn() {
-            const horn = document.getElementById('hornAudio');
-            horn.currentTime = 0;
-            horn.play();
+        function triggerGetOut(event) {
+            event.stopPropagation(); // Prevents spawning a mini chopper on button click
+            const getOut = document.getElementById('getOutAudio');
+            const mainText = document.getElementById('main-text');
+            const chopper = document.getElementById('chopper');
 
-            // Make Chopper go CRAZY speed
-            speedX = (speedX > 0 ? 25 : -25);
-            speedY = (speedY > 0 ? 25 : -25);
+            getOut.volume = 1.0;
+            getOut.currentTime = 0;
+            getOut.play();
 
-            document.getElementById('main-text').innerText = "CHOPPER IS ANGRY!!";
+            // Visual shock
+            mainText.innerText = "GET OUT!!!";
+            mainText.style.fontSize = "15rem";
+            chopper.style.transform = "scale(3)"; // Chopper gets huge and scary
             
+            document.body.style.backgroundColor = "white";
+
             setTimeout(() => {
-                document.getElementById('main-text').innerText = "TUNG TUNG TUNG!";
-            }, 2000);
+                mainText.innerText = "SAHUR WOI!";
+                mainText.style.fontSize = "6rem";
+                chopper.style.transform = "scale(1)";
+            }, 1500);
+        }
+
+        function spawnMiniChopper(e) {
+            if(!isMoving) return;
+            const mini = document.createElement('img');
+            mini.src = 'chopper.jpg';
+            mini.style.position = 'fixed';
+            mini.style.left = (e.clientX - 25) + 'px';
+            mini.style.top = (e.clientY - 25) + 'px';
+            mini.style.width = '100px';
+            mini.style.zIndex = '40';
+            document.body.appendChild(mini);
+            
+            // Make them disappear after a second to save the browser from crashing
+            setTimeout(() => mini.remove(), 1000);
         }
     </script>
 </body>
