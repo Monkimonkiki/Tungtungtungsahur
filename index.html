@@ -43,4 +43,122 @@
             cursor: pointer;
             font-weight: bold;
             z-index: 200;
-            border-radius:
+            border-radius: 15px;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); background: #ff00ff; }
+            100% { transform: scale(1); }
+        }
+
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffcc00;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay" onclick="startChaos()">
+        <h1>⚠️ WARNING: EXTREME SAHUR ⚠️ <br> CLICK TO AWAKEN</h1>
+    </div>
+
+    <img src="chopper.jpg" id="chopper" alt="CHOPPER">
+
+    <h1 id="main-text">TUNG TUNG TUNG!</h1>
+    
+    <button class="chaos-btn" onclick="playRandomSound()">SNOOZE?</button>
+
+    <audio id="sahurAudio" loop>
+        <source src="sahur.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        let posX = 0, posY = 0;
+        let speedX = 10, speedY = 10;
+        let isRunning = false;
+
+        // THE NOISE LIST (PG Meme Edition)
+        const sounds = [
+            "https://www.myinstants.com/media/sounds/mlg-airhorn.mp3",
+            "https://www.myinstants.com/media/sounds/get-out-meme.mp3",
+            "https://www.myinstants.com/media/sounds/discord-notification.mp3",
+            "https://www.myinstants.com/media/sounds/vine-boom.mp3",
+            "https://www.myinstants.com/media/sounds/bruh.mp3",
+            "https://www.myinstants.com/media/sounds/wait-a-minute-who-are-you.mp3",
+            "https://www.myinstants.com/media/sounds/fart-meme-sound.mp3"
+        ];
+
+        function startChaos() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('sahurAudio').play();
+            isRunning = true;
+            moveChopper();
+            
+            // Initial flash
+            setInterval(() => {
+                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            }, 150);
+        }
+
+        function moveChopper() {
+            const img = document.getElementById('chopper');
+            function animate() {
+                if (!isRunning) return;
+                const screenWidth = window.innerWidth - img.clientWidth;
+                const screenHeight = window.innerHeight - img.clientHeight;
+
+                posX += speedX;
+                posY += speedY;
+
+                if (posX >= screenWidth || posX <= 0) speedX *= -1;
+                if (posY >= screenHeight || posY <= 0) speedY *= -1;
+
+                img.style.left = posX + 'px';
+                img.style.top = posY + 'px';
+                img.style.transform = `rotate(${posX % 360}deg)`; // Chopper spins!
+                
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function playRandomSound() {
+            // Pick a random sound
+            const randomUrl = sounds[Math.floor(Math.random() * sounds.length)];
+            const audio = new Audio(randomUrl);
+            audio.volume = 1.0;
+            audio.play();
+
+            // Make the text react
+            const mainText = document.getElementById('main-text');
+            mainText.innerText = "WAKE UP!!!";
+            mainText.style.fontSize = "12rem";
+            mainText.style.color = "black";
+
+            // Temporary speed boost
+            speedX *= 1.5;
+            speedY *= 1.5;
+
+            setTimeout(() => {
+                mainText.innerText = "TUNG TUNG TUNG!";
+                mainText.style.fontSize = "5rem";
+                mainText.style.color = "white";
+                // Reset speed slightly so it doesn't break physics immediately
+                speedX = (speedX > 0 ? 12 : -12);
+                speedY = (speedY > 0 ? 12 : -12);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
