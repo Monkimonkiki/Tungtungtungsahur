@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAHURRRRRRRRRRR</title>
+    <title>CHOPPER SAHURRRRR</title>
     <style>
         body {
             background-color: #ffcc00;
-            font-family: 'Comic Sans MS', cursive;
+            font-family: 'Impact', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -21,84 +21,118 @@
         h1 {
             font-size: 5rem;
             color: #d90429;
-            text-shadow: 5px 5px #fff;
-            animation: shake 0.5s infinite;
+            text-shadow: 4px 4px 0px #fff;
+            z-index: 10;
         }
 
-        .drum-container {
-            font-size: 100px;
-            cursor: pointer;
+        /* The Chopper Image Style */
+        #chopper {
+            position: absolute;
+            width: 200px; /* Adjust size as needed */
+            height: auto;
+            z-index: 5;
             transition: transform 0.1s;
         }
 
-        .drum-container:active {
-            transform: scale(1.2) rotate(10deg);
+        .snooze-btn {
+            margin-top: 20px;
+            padding: 20px 40px;
+            font-size: 2rem;
+            background: #000;
+            color: #fff;
+            border: 5px solid #fff;
+            cursor: pointer;
+            border-radius: 50px;
+            font-weight: bold;
+            z-index: 100;
         }
 
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-        }
-
-        .overlay {
+        #overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            color: white;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            color: gold;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 100;
+            z-index: 1000;
             cursor: pointer;
-            font-size: 2rem;
         }
     </style>
 </head>
-<body onclick="playSahur()">
+<body>
 
-    <div id="overlay" class="overlay">
-        <h1>CLICK TO WAKE UP THE NEIGHBORS <br> 🥁 🥁 🥁</h1>
+    <div id="overlay" onclick="startChaos()">
+        <h1>TAP FOR CHOPPER SAHUR <br> 🦌 🥁 📢</h1>
     </div>
 
-    <h1>SAHUR! SAHUR!</h1>
+    <img src="chopper.jpg" id="chopper" alt="CHOPPER">
+
+    <h1 id="main-text">TUNG TUNG TUNG!</h1>
     
-    <div class="drum-container">
-        🥁 🔊 🥘
-    </div>
-
-    <h2 id="text-flash">TUNG TUNG TUNG TUNG!</h2>
+    <button class="snooze-btn" onclick="blastHorn()">SNOOZE (CHOPPER MODE)</button>
 
     <audio id="sahurAudio" loop>
         <source src="sahur.mp3" type="audio/mpeg">
     </audio>
+    <audio id="hornAudio">
+        <source src="https://www.myinstants.com/media/sounds/mlg-airhorn.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
-        function playSahur() {
-            const audio = document.getElementById('sahurAudio');
-            const overlay = document.getElementById('overlay');
-            const text = document.getElementById('text-flash');
-            
-            // Play audio
-            audio.play().catch(e => console.log("Audio needs a click first!"));
-            
-            // Hide overlay
-            overlay.style.display = 'none';
+        let posX = 0, posY = 0;
+        let speedX = 5, speedY = 5;
+        let isMoving = false;
 
-            // Make background flash obnoxious colors
-            setInterval(() => {
-                const colors = ['#ffcc00', '#ff0000', '#00ff00', '#0000ff', '#ffffff'];
-                document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                text.innerText = "TUNG! ".repeat(Math.floor(Math.random() * 5) + 1);
-            }, 100);
+        function startChaos() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('sahurAudio').play();
+            isMoving = true;
+            moveChopper();
             
-            alert("TUNG TUNG TUNG! SAHUR WOIIIIII!");
+            // Background Flash
+            setInterval(() => {
+                const colors = ['#ff0000', '#00ff00', '#ffffff', '#ffff00', '#ff00ff'];
+                document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            }, 150);
+        }
+
+        function moveChopper() {
+            const img = document.getElementById('chopper');
+            const screenWidth = window.innerWidth - img.clientWidth;
+            const screenHeight = window.innerHeight - img.clientHeight;
+
+            function animate() {
+                if (!isMoving) return;
+                
+                posX += speedX;
+                posY += speedY;
+
+                if (posX >= screenWidth || posX <= 0) speedX *= -1;
+                if (posY >= screenHeight || posY <= 0) speedY *= -1;
+
+                img.style.left = posX + 'px';
+                img.style.top = posY + 'px';
+                
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function blastHorn() {
+            const horn = document.getElementById('hornAudio');
+            horn.currentTime = 0;
+            horn.play();
+
+            // Make Chopper go CRAZY speed
+            speedX = (speedX > 0 ? 25 : -25);
+            speedY = (speedY > 0 ? 25 : -25);
+
+            document.getElementById('main-text').innerText = "CHOPPER IS ANGRY!!";
+            
+            setTimeout(() => {
+                document.getElementById('main-text').innerText = "TUNG TUNG TUNG!";
+            }, 2000);
         }
     </script>
 </body>
