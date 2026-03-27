@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAHURRRRRRRRRRR</title>
+    <style>
+        body {
+            background-color: #ffcc00;
+            font-family: 'Comic Sans MS', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 5rem;
+            color: #d90429;
+            text-shadow: 5px 5px #fff;
+            animation: shake 0.5s infinite;
+        }
+
+        .drum-container {
+            font-size: 100px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .drum-container:active {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
+            font-size: 2rem;
+        }
+    </style>
+</head>
+<body onclick="playSahur()">
+
+    <div id="overlay" class="overlay">
+        <h1>CLICK TO WAKE UP THE NEIGHBORS <br> 🥁 🥁 🥁</h1>
+    </div>
+
+    <h1>SAHUR! SAHUR!</h1>
+    
+    <div class="drum-container">
+        🥁 🔊 🥘
+    </div>
+
+    <h2 id="text-flash">TUNG TUNG TUNG TUNG!</h2>
+
+    <audio id="sahurAudio" loop>
+        <source src="sahur.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function playSahur() {
+            const audio = document.getElementById('sahurAudio');
+            const overlay = document.getElementById('overlay');
+            const text = document.getElementById('text-flash');
+            
+            // Play audio
+            audio.play().catch(e => console.log("Audio needs a click first!"));
+            
+            // Hide overlay
+            overlay.style.display = 'none';
+
+            // Make background flash obnoxious colors
+            setInterval(() => {
+                const colors = ['#ffcc00', '#ff0000', '#00ff00', '#0000ff', '#ffffff'];
+                document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                text.innerText = "TUNG! ".repeat(Math.floor(Math.random() * 5) + 1);
+            }, 100);
+            
+            alert("TUNG TUNG TUNG! SAHUR WOIIIIII!");
+        }
+    </script>
+</body>
+</html>
