@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHOPPER'S SAHUR ROULETTE</title>
+    <title>THE ULTIMATE SAHUR TRAP</title>
     <style>
         body {
-            background-color: #000;
-            font-family: 'Impact', 'Arial Black', sans-serif;
+            background-color: #ffafcc;
+            font-family: 'Arial', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -15,149 +15,129 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            text-align: center;
-            color: white;
+            transition: background-color 0.05s;
         }
 
         #main-text {
-            font-size: 5rem;
-            text-transform: uppercase;
+            font-size: 4rem;
+            color: white;
+            text-shadow: 3px 3px #ff5c8a;
             z-index: 100;
-            transition: all 0.1s;
+            text-align: center;
         }
 
         #chopper {
             position: absolute;
-            width: 220px;
+            width: 200px;
             z-index: 50;
-            filter: drop-shadow(0 0 10px #fff);
+            border-radius: 20px;
+            border: 8px solid white;
         }
 
-        .chaos-btn {
+        .snooze-btn {
+            display: none; /* Hidden until the drop */
             margin-top: 30px;
-            padding: 30px 60px;
-            font-size: 3rem;
-            background: #00ff00;
-            color: #000;
-            border: 10px solid #fff;
+            padding: 25px 50px;
+            font-size: 2.5rem;
+            background: #ff0000;
+            color: white;
+            border: 5px solid white;
             cursor: pointer;
-            font-weight: bold;
             z-index: 200;
-            border-radius: 15px;
-            animation: pulse 0.5s infinite;
+            font-weight: bold;
+            border-radius: 50px;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); background: #ff00ff; }
-            100% { transform: scale(1); }
-        }
-
-        #overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffcc00;
-            color: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            cursor: pointer;
-        }
+        /* Flash classes */
+        .chaos-mode { background-color: #000 !important; font-family: 'Impact' !important; }
     </style>
 </head>
 <body>
 
-    <div id="overlay" onclick="startChaos()">
-        <h1>⚠️ WARNING: EXTREME SAHUR ⚠️ <br> CLICK TO AWAKEN</h1>
+    <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:1000; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+        <h1>💖 CLICK FOR THE BABY BOO 💖</h1>
     </div>
 
     <img src="chopper.jpg" id="chopper" alt="CHOPPER">
-
-    <h1 id="main-text">TUNG TUNG TUNG!</h1>
+    <h1 id="main-text">You're so precious...</h1>
     
-    <button class="chaos-btn" onclick="playRandomSound()">SNOOZE?</button>
+    <button id="snoozeBtn" class="snooze-btn" onclick="playRandomMeme()">I'M SLEEPING!!!</button>
 
-    <audio id="sahurAudio" loop>
-        <source src="sahur.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bazziAudio"><source src="bazzi.mp3" type="audio/mpeg"></audio>
+    <audio id="sahurAudio" loop><source src="sahur.mp3" type="audio/mpeg"></audio>
 
     <script>
         let posX = 0, posY = 0;
-        let speedX = 10, speedY = 10;
-        let isRunning = false;
+        let speedX = 3, speedY = 3;
+        let chaosActive = false;
 
-        // THE NOISE LIST (PG Meme Edition)
-        const sounds = [
+        const memeSounds = [
             "https://www.myinstants.com/media/sounds/mlg-airhorn.mp3",
             "https://www.myinstants.com/media/sounds/get-out-meme.mp3",
-            "https://www.myinstants.com/media/sounds/discord-notification.mp3",
             "https://www.myinstants.com/media/sounds/vine-boom.mp3",
             "https://www.myinstants.com/media/sounds/bruh.mp3",
-            "https://www.myinstants.com/media/sounds/wait-a-minute-who-are-you.mp3",
+            "https://www.myinstants.com/media/sounds/discord-notification.mp3",
             "https://www.myinstants.com/media/sounds/fart-meme-sound.mp3"
         ];
 
-        function startChaos() {
+        function startMeme() {
             document.getElementById('overlay').style.display = 'none';
-            document.getElementById('sahurAudio').play();
-            isRunning = true;
-            moveChopper();
+            document.getElementById('bazziAudio').play();
+            animateChopper();
             
-            // Initial flash
-            setInterval(() => {
-                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-                document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            }, 150);
+            // Trigger the "Tung Tung Tung" drop after 12 seconds
+            setTimeout(triggerTheDrop, 12000); 
         }
 
-        function moveChopper() {
+        document.getElementById('overlay').onclick = startMeme;
+
+        function animateChopper() {
             const img = document.getElementById('chopper');
-            function animate() {
-                if (!isRunning) return;
+            function move() {
                 const screenWidth = window.innerWidth - img.clientWidth;
                 const screenHeight = window.innerHeight - img.clientHeight;
-
-                posX += speedX;
-                posY += speedY;
-
+                posX += speedX; posY += speedY;
                 if (posX >= screenWidth || posX <= 0) speedX *= -1;
                 if (posY >= screenHeight || posY <= 0) speedY *= -1;
-
                 img.style.left = posX + 'px';
                 img.style.top = posY + 'px';
-                img.style.transform = `rotate(${posX % 360}deg)`; // Chopper spins!
-                
-                requestAnimationFrame(animate);
+                if(chaosActive) img.style.transform = `rotate(${posX}deg)`;
+                requestAnimationFrame(move);
             }
-            animate();
+            move();
         }
 
-        function playRandomSound() {
-            // Pick a random sound
-            const randomUrl = sounds[Math.floor(Math.random() * sounds.length)];
+        function triggerTheDrop() {
+            chaosActive = true;
+            document.getElementById('bazziAudio').pause();
+            document.getElementById('sahurAudio').play(); // Sahur loop starts!
+            
+            document.body.classList.add('chaos-mode');
+            document.getElementById('snoozeBtn').style.display = 'block';
+            document.getElementById('main-text').innerText = "TUNG TUNG TUNG SAHURRRRR!!!";
+            document.getElementById('main-text').style.fontSize = "6rem";
+            
+            speedX = 15; speedY = 15;
+
+            // Permanent flashing background
+            setInterval(() => {
+                const colors = ['#ff0000', '#000000', '#ffffff', '#ffff00'];
+                document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            }, 70);
+        }
+
+        function playRandomMeme() {
+            // Pick a random sound from the list to play OVER the Sahur loop
+            const randomUrl = memeSounds[Math.floor(Math.random() * memeSounds.length)];
             const audio = new Audio(randomUrl);
             audio.volume = 1.0;
             audio.play();
 
-            // Make the text react
-            const mainText = document.getElementById('main-text');
-            mainText.innerText = "WAKE UP!!!";
-            mainText.style.fontSize = "12rem";
-            mainText.style.color = "black";
-
-            // Temporary speed boost
-            speedX *= 1.5;
-            speedY *= 1.5;
-
+            // Visual "Shake" effect on click
+            document.getElementById('main-text').style.transform = "scale(1.5)";
             setTimeout(() => {
-                mainText.innerText = "TUNG TUNG TUNG!";
-                mainText.style.fontSize = "5rem";
-                mainText.style.color = "white";
-                // Reset speed slightly so it doesn't break physics immediately
-                speedX = (speedX > 0 ? 12 : -12);
-                speedY = (speedY > 0 ? 12 : -12);
-            }, 1000);
+                document.getElementById('main-text').style.transform = "scale(1)";
+            }, 200);
         }
     </script>
 </body>
